@@ -7,7 +7,7 @@ license: MIT
 metadata:
   hermes:
     tags: [wechat, writing, html, layout, compliance, cover]
-    category: wechat
+    category: content
     related_skills: [media/agnes-multimodal]
 ---
 
@@ -49,7 +49,7 @@ metadata:
 
 ## How to Run
 
-命令里的 `scripts/` 一律相对本技能目录，先 `cd <HERMES_HOME>/skills/wechat/wechat-article`。
+命令里的 `scripts/` 一律相对本技能目录，先 `cd <HERMES_HOME>/skills/content/wechat-article`。
 
 ```bash
 # 装完先跑这个，查依赖、脚本、目录写权限

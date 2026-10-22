@@ -16,16 +16,35 @@
 
 ## 快速开始
 
-本仓库的根目录**就是这个 skill 本体**。先克隆，再拷进宿主应用的 skill 目录：
+本仓库的根目录**就是这个 skill 本体**。先克隆，再按你的部署方式放进去。
+
+### Docker Compose 部署
+
+容器里的 `~` 是容器 home，**不是持久卷**。别 `cp` 进容器，容器一重建就没了。要放到宿主机的数据目录——就是 compose 里映射给 `/opt/data` 的那个目录：
 
 ```bash
 git clone https://github.com/xuhaosl/wechat-article.git
-
-# Hermes Agent
-cp -r wechat-article ~/.hermes/skills/wechat/
+mkdir -p <宿主机数据目录>/skills/content
+cp -r wechat-article <宿主机数据目录>/skills/content/
 ```
 
-分类层可省，直接放 `~/.hermes/skills/wechat-article/` 也认。
+装完在容器里验一下，看得到 `SKILL.md` 就对了：
+
+```bash
+docker exec <容器名> ls /opt/data/skills/content/wechat-article/SKILL.md
+```
+
+### 原生安装
+
+```bash
+git clone https://github.com/xuhaosl/wechat-article.git
+mkdir -p ~/.hermes/skills/content
+cp -r wechat-article ~/.hermes/skills/content/
+```
+
+`content` 是分类层，可省——直接放 `~/.hermes/skills/wechat-article/` 也认。
+
+### 装依赖
 
 两个第三方包都要装，`selftest.py` 会把缺的算作失败：
 
@@ -33,13 +52,22 @@ cp -r wechat-article ~/.hermes/skills/wechat/
 pip install Pillow openpyxl
 ```
 
-产出根目录默认 `/opt/data/wechat`（容器里的持久卷）。不在容器里跑就先设一下：
+### 设产出目录
+
+`$WECHAT_HOME` 是产出根，脚本里的默认值是 `/opt/data/wechat`。
+
+- **Docker Compose**：`/opt/data` 就是持久卷，不用设
+- **原生安装**：默认值指向一个不存在的路径，必须先设，否则写出来的稿子落不到你想看的地方
 
 ```bash
 export WECHAT_HOME=/你的目录
 ```
 
-装完先跑自检，它会验依赖、8 个脚本、18 份 references 齐不齐、产出目录写不写得进去：
+目录不用预建，写文件时脚本自己建。
+
+### 跑自检
+
+它会验依赖、8 个脚本、18 份 references 齐不齐、产出目录写不写得进去：
 
 ```bash
 python3 scripts/selftest.py --smoke
@@ -47,11 +75,17 @@ python3 scripts/selftest.py --smoke
 
 `--smoke` 会拿一份内置假稿真跑一遍三个闸门，再造一张纯色图跑裁封面。全程在临时目录里，不调 API、不耗额度，跑完自动删。**它只证明脚本是活的，不证明任何真实稿子合格。**
 
-然后直接用：
+### 用起来
 
 ```bash
+# 原生安装
 hermes chat -s wechat-article --oneshot -q "按这份素材写一篇"
+
+# Docker Compose
+docker exec -it <容器名> hermes chat -s wechat-article --oneshot -q "按这份素材写一篇"
 ```
+
+`--oneshot` 别省。真实 TTY 下只给 `-q`，那句话会被当成交互会话的第一轮，然后等你继续输入。
 
 ## 包结构
 
