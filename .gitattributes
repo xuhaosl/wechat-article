@@ -1,0 +1,7 @@
+# 统一 LF：技能要跑在 Linux 容器里，CRLF 会让 python3 脚本的 shebang 失效
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary

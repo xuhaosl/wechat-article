@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+
+# 系统
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 产物与临时件（本仓库只装技能本体，产物不进版本库）
+output/
+tmp/
+*.bak
+*.tmp
+~$*
+
+# 本地配置（含密钥的都不许上来）
+.env
+config.json
